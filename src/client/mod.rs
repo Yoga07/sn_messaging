@@ -162,7 +162,7 @@ impl MsgEnvelope {
             Transfer(c) => Ok(Section(c.dst_address())),
             // Data dst (after reaching `Gateway`)
             // is `Transfer` and then `Metadata`.
-            Data { cmd, payment } => {
+            Data { cmd, requester, .. } => {
                 let sender = self.most_recent_sender();
                 match sender.address() {
                     // From `Client` to `Gateway`.
@@ -171,7 +171,7 @@ impl MsgEnvelope {
                         match sender.duty() {
                             // From `Gateway` to `Transfer`.
                             Some(Duty::Elder(ElderDuties::Gateway)) => {
-                                Ok(Section(payment.sender().into()))
+                                Ok(Section(requester.clone().into()))
                             }
                             // From `Transfer` to `Metadata`.
                             Some(Duty::Elder(ElderDuties::Transfer))

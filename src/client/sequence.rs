@@ -176,6 +176,11 @@ impl SequenceWrite {
             _ => None,
         }
     }
+
+    /// Returns `True` if the operation is mutation
+    pub fn is_mutation(&self) -> bool {
+        !matches!(self, Self::New(_))
+    }
 }
 
 impl fmt::Debug for SequenceWrite {

@@ -70,6 +70,14 @@ impl DataCmd {
             Self::Sequence(write) => write.owner(),
         }
     }
+
+    pub fn is_mutation(&self) -> bool {
+        match self {
+            Self::Blob(write) => write.is_mutation(),
+            Self::Map(write) => write.is_mutation(),
+            Self::Sequence(write) => write.is_mutation(),
+        }
+    }
 }
 
 impl fmt::Debug for DataCmd {

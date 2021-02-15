@@ -92,6 +92,12 @@ impl BlobWrite {
             Self::DeletePrivate(_) => None,
         }
     }
+
+    /// Returns `True` if the operation is mutation
+    // False by default for Blobs as they are not meant to be mutated.
+    pub fn is_mutation(&self) -> bool {
+        false
+    }
 }
 
 impl fmt::Debug for BlobRead {
