@@ -9,7 +9,7 @@
 
 use super::{data::DataCmd, transfer::TransferCmd, AuthorisationKind};
 use serde::{Deserialize, Serialize};
-use sn_data_types::TransferAgreementProof;
+use sn_data_types::{PublicKey, TransferAgreementProof};
 use xor_name::XorName;
 
 /// Command messages for data or transfer operations
@@ -20,8 +20,10 @@ pub enum Cmd {
     Data {
         /// The data command struct itself
         cmd: DataCmd,
-        /// Proof of payment for the data command
-        payment: TransferAgreementProof,
+        /// Proof of payment for the data command, `None` if it's mutation
+        payment: Option<TransferAgreementProof>,
+        /// PublicKey of the requester
+        requester: PublicKey,
     },
     /// Command for transfering safe network tokens
     Transfer(TransferCmd),
