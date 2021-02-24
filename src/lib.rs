@@ -34,7 +34,7 @@ type DestinationKey = PublicKey;
 #[allow(clippy::large_enum_variant)]
 pub enum MessageType {
     Ping,
-    SectionInfo((section_info::Message, DestinationKey)),
+    SectionInfo((section_info::Message, Option<DestinationKey>)),
     ClientMessage((client::Message, DestinationKey)),
     #[cfg(not(feature = "client-only"))]
     NodeMessage((node::NodeMessage, DestinationKey)),

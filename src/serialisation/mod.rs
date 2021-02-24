@@ -40,7 +40,7 @@ impl WireMsg {
     /// Creates a new instance keeping a (serialized) copy of the 'SectionInfo' message provided.
     pub fn new_sectioninfo_msg(
         query: &section_info::Message,
-        dest_key: PublicKey,
+        dest_key: Option<PublicKey>,
     ) -> Result<WireMsg> {
         let payload_vec = rmp_serde::to_vec_named(&(query, dest_key)).map_err(|err| {
             Error::Serialisation(format!(
@@ -139,7 +139,7 @@ impl WireMsg {
         match self.header.kind() {
             MessageKind::Ping => Ok(MessageType::Ping),
             MessageKind::SectionInfo => {
-                let msg_contents: (section_info::Message, PublicKey) =
+                let msg_contents: (section_info::Message, Option<PublicKey>) =
                     rmp_serde::from_slice(&self.payload).map_err(|err| {
                         Error::FailedToParse(format!(
                             "Client message payload as Msgpack: {}",
@@ -187,7 +187,7 @@ impl WireMsg {
     /// MsgEnvelope, returning the serialized WireMsg.
     pub fn serialize_sectioninfo_msg(
         query: &section_info::Message,
-        dest_key: PublicKey,
+        dest_key: Option<PublicKey>,
     ) -> Result<Bytes> {
         Self::new_sectioninfo_msg(query, dest_key)?.serialize()
     }

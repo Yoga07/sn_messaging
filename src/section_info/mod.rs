@@ -105,16 +105,22 @@ impl Message {
     pub fn dest_pk(bytes: Bytes) -> crate::Result<PublicKey> {
         let deserialized = WireMsg::deserialize(bytes)?;
         if let MessageType::SectionInfo((_query, dest_pk)) = deserialized {
-            Ok(dest_pk)
+            if let Some(dest_pk) = dest_pk {
+                Ok(dest_pk)
+            } else {
+                Err(crate::Error::FailedToParse(
+                    "No Destination PK provided".to_string(),
+                ))
+            }
         } else {
             Err(crate::Error::FailedToParse(
-                "bytes as a network info message".to_string(),
+                "Bytes as a network info message".to_string(),
             ))
         }
     }
 
     /// serialize this Query into bytes ready to be sent over the wire.
-    pub fn serialize(&self, dest_key: PublicKey) -> crate::Result<Bytes> {
+    pub fn serialize(&self, dest_key: Option<PublicKey>) -> crate::Result<Bytes> {
         WireMsg::serialize_sectioninfo_msg(self, dest_key)
     }
 }
